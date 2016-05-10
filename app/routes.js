@@ -15,16 +15,24 @@ module.exports = function(app, passport) {
 
     app.post('/signin', function(req, res){
         if (helper.emailExists(req)){
-            helper.authenticate(req, res)
+            res.redirect('/authenticate/' + req.body.email)
         }
         else {
             helper.verifyEmail(req, res);
         }
     });
 
-    app.get('/authenticate/:id', function(req, res){
-        helper.authenticate(req, res, passport);
-    });
+    app.get('/authenticate/:id', test, passport.authenticate('local-signin', {
+        successRedirect : '/chat',
+        failureRedirect : '/error',
+        failureFlash : true
+    }), function(req, res){
+        console.log(req.params);
+    })
+
+    app.get('/error', function(req, res){
+        res.render('error', {err : null})
+    })
 
     // route for facebook authentication and login
     app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
@@ -42,3 +50,8 @@ module.exports = function(app, passport) {
         helper.logout(req, res, passport)
     });
 };
+
+function test (req, res, next){
+    console.log(req.params);
+    next()
+}

@@ -29,8 +29,9 @@ mongoose.connect(db.url, function(err){
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser.urlencoded({extended : false}));
 app.use(bodyParser.json()); // get information from html forms
-app.use(bodyParser.urlencoded({extended : true}));
+
 
 app.set('view engine', 'ejs'); // set up ejs for templating
 app.use(express.static(__dirname + '/views')) // serv static content in views
@@ -41,7 +42,7 @@ app.use('/authenticate', express.static('bower_components'));
 // required for passport
 app.use(session({
     secret: 'ILOVEUCRCHATSITE',
-    resave : true,
+    resave : false,
     saveUninitialized : false
 })); // session secret
 app.use(passport.initialize());

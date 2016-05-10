@@ -3,6 +3,14 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var LocalStrategy = require('passport-local').Strategy
 var fb = require('./fb.js');
 
+
+function validEmail(req){
+    // this returns true if we have an @ucr.edu email
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([ucr]+\.)+[edu]{2,}))$/;
+    return re.test(req.body.email);
+}
+
+
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -14,60 +22,83 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user._id);
+        return done(null, user.ucrEmail);
     });
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user) {
-            done(err, user._id);
+            return done(err, user.ucrEmail);
         });
     });
 
 
     passport.use('local-signin', new LocalStrategy({
+        usernameField : 'email',
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
-    function(req, done) {
-        // User.findOne wont fire unless data is sent back
+    function(req, email, done) {
+        console.log(req, email, done)
+
         process.nextTick(function() {
+
+            console.log(email)
 
             if (req.params.id){ // if you send an ID that means you are clicking on the link in the email
 
-                User.findOne({ 'url' :  req.params.id }, function(err, user) {
-                    // if there are any errors, return the error
-                    if (err){
-                        console.log(err);
-                        done(err)
-                    }
-                    // check to see if theres already a user with that email
-                    if (user) {
-                        user.validEmail = true
-                        user.save(function(err, user) {
-                            if (err){
-                                console.log(err)
-                            }
-                            done(null, user);
-                        });
-                    }
-                    else {
-                        done(null, false, req.flash('signupMessage', 'You do not exist'));
-                    }
+                if (validEmail(req.params.id)){
+                    User.findOne({ 'ucrEmail' :  req.params.id }, function(err, user) {
+                        // if there are any errors, return the error
+                        if (err){
+                            console.log(err);
+                            return done(err)
+                        }
+                        if (user) {
+                            return done(null, user);
+                        }
+                        else {
+                            return done(null, false, req.flash('signupMessage', 'You do not exist'));
+                        }
 
-                });
+                    });
+                }
+                else {
+                    User.findOne({ 'url' :  req.params.id }, function(err, user) {
+                        // if there are any errors, return the error
+                        if (err){
+                            console.log(err);
+                            return done(err)
+                        }
+                        // check to see if theres already a user with that email
+                        if (user) {
+                            user.validEmail = true
+                            user.save(function(err, user) {
+                                if (err){
+                                    console.log(err)
+                                }
+                                return done(null, user);
+                            });
+                        }
+                        else {
+                            return done(null, false, req.flash('signupMessage', 'You do not exist'));
+                        }
+
+                    });
+                }
             }
+
             else { // else you are logging in
                 User.findOne({ 'ucrEmail' :  req.body.email }, function(err, user) {
                     // if there are any errors, return the error
                     if (err){
                         console.log(err);
-                        done(err)
+                        return done(err)
                     }
                     if (user) {
-                        done(null, user);
+                        return done(null, user);
                     }
                     else {
-                        done(null, false, req.flash('signupMessage', 'You do not exist'));
+                        return done(null, false, req.flash('signupMessage', 'You do not exist'));
                     }
 
                 });
@@ -161,7 +192,4 @@ module.exports = function(passport) {
        });
 
    }));
-
-
-
 };

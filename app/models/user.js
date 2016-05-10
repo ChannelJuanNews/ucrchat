@@ -2,6 +2,7 @@
 // load the things we need
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt-nodejs');
+var md5 = require('md5');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
@@ -31,7 +32,7 @@ userSchema.methods.validPassword = function(password) {
 };
 
 userSchema.methods.generateURL = function(id) {
-    hash = bcrypt.hashSync(id, bcrypt.genSaltSync(8), null);
+    hash = md5(id)
     this.url = hash;
     this.save(function(err){
         if (err){

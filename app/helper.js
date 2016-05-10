@@ -100,13 +100,6 @@ var helper = {
         })
     },
 
-    authenticate : function(req, res, passport){
-        passport.authenticate('local-signin', {
-            successRedirect : '/chat',
-            failureRedirect : '/error',
-            failureFlash : true
-        })
-    }
 
 
 }
