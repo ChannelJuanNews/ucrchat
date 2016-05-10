@@ -23,10 +23,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/authenticate/:id', function(req, res){
-        res.render('password');
-    });
-    app.post('/authenticate/:id', function(req, res){
-        helper.authenticate(req, res);
+        helper.authenticate(req, res, passport);
     });
 
     // route for facebook authentication and login
@@ -35,7 +32,7 @@ module.exports = function(app, passport) {
      // handle the callback after facebook has authenticated the user
      app.get('/auth/facebook/callback',
          passport.authenticate('facebook', {
-             successRedirect : '/',
+             successRedirect : '/chat',
              failureRedirect : '/error',
              failureFlash : true
          }));

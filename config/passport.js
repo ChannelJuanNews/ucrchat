@@ -34,7 +34,7 @@ module.exports = function(passport) {
 
             if (req.params.id){ // if you send an ID that means you are clicking on the link in the email
 
-                User.findOne({ '_id' :  req.params.id }, function(err, user) {
+                User.findOne({ 'url' :  req.params.id }, function(err, user) {
                     // if there are any errors, return the error
                     if (err){
                         console.log(err);

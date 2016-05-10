@@ -38,18 +38,18 @@ var helper = {
         }
         else {
             // If We have a valid email address then save the user and send out email
-            console.log('REQ===============================================================', req)
             newUser = new User();
             newUser.ucrEmail = req.body.email;
             newUser.validEmail = false;
             newUser.restrictedChat = true;
+
 
             console.log(newUser)
 
             newUser.save(function(err, user){
                 if (err){
                     console.log(err)
-                    res.render('/', {email : req.body.email});
+                    res.render('error', {err : err});
                 }
                 else {
 
@@ -58,7 +58,7 @@ var helper = {
                         from: 'ucrchat@gmail.com', // sender address
                         to: req.body.email, // list of receivers
                         subject: 'UCR chat email verification', // Subject line
-                        html: '<b>Hello world!</b>',
+                        html: '<b>Hello Highlander!</b><p>To verify your email click this link http://localhost:3000/authenticate/' + user.generateURL(user.id) + '</p>',
                         alternatives: [
                             {
                                 contentType: 'text/x-web-markdown',
@@ -67,14 +67,15 @@ var helper = {
                         ]
                     };
 
+                    console.log(user)
                     // send mail with defined transport object
                       transporter.sendMail(mailOptions, function(err, info){
                           if(err){
-                              return console.log(err);
-                              res.render('/', {email : req.body.email});
+                              console.log(err);
+                              res.render('errror', { err : err } );
                           }
                           console.log('Message sent: ' + info.response);
-                          res.render('/', {email : req.body.email});
+                          res.render('index', { user : user } );
                       });
 
                 }
@@ -101,7 +102,7 @@ var helper = {
 
     authenticate : function(req, res, passport){
         passport.authenticate('local-signin', {
-            successRedirect : '/',
+            successRedirect : '/chat',
             failureRedirect : '/error',
             failureFlash : true
         })

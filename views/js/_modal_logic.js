@@ -1,5 +1,5 @@
 
-$(document).ready (function(){
+window.onload = function() {
 
 
     $('#modal-submit').hide() // submit button
@@ -40,9 +40,9 @@ $(document).ready (function(){
     });
 
     $('#modal-submit')[0].click(function(event){
-        window.localStorage.setItem('emailEntered', 'true')
+        //window.localStorage.setItem('emailEntered', 'true')
         $('#modal-form')[0].submit();
     })
 
 
-})
+}
