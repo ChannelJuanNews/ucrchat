@@ -1,6 +1,13 @@
-$('#modal1').openModal({
-    dismissible: false
-});
+
+if (window.localStorage.getItem('emailEntered')){
+    // do nothing
+}
+else {
+    $('#modal1').openModal({
+        dismissible: false
+    });
+}
+
 
 function validEmail(email){
     var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([ucr]+\.)+[edu]{2,}))$/;
@@ -12,7 +19,7 @@ $('#modal-submit').hide()
 
 $('#email').keyup(function(event){
 
-    if(validEmail($('#email').val())){
+    if (validEmail($('#email').val())){
         $($('#modal-message')[0]).css('color', 'green')
         $('#modal-message')[0].innerHTML = "Good to go!"
         $('#modal-submit').show()
@@ -22,4 +29,12 @@ $('#email').keyup(function(event){
         $('#modal-message')[0].innerHTML = "Please Enter A Valid UCR Email Address"
     }
 
+    if ($('#email').val() == ""){
+        $('#modal-message')[0].innerHTML = ""
+    }
+
+});
+
+$('#modal-submit')[0].click(function(){
+    window.localStorage.setItem('emailEntered', true)
 })

@@ -12,8 +12,11 @@
         <!--This is the nav--->
         <%- include('partials/_nav.ejs')%>
 
-        <!--this is the body--->
-        <%- include('partials/_index.ejs')%>
+        <% if (!user) { %>
+            <!--this is the body--->
+            <%- include('partials/_index.ejs')%>
+
+        <% } %>
 
         <!--this is the footer--->
         <%- include('partials/_footer.ejs')%>
@@ -29,6 +32,9 @@
         <% if (!user) { %>
             <script src="js/_modal_logic.js" charset="utf-8"></script>
         <% } %>
-
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            var socket = io();
+        </script>
     </body>
 </html>

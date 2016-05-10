@@ -9,7 +9,7 @@ module.exports = function(app, passport) {
             res.render('index.ejs', {user : req.user}); // load the index.ejs file
         }
         else {
-            res.render('index.ejs', {user : null}); // load the index.ejs file
+            res.render('index.ejs', { user : null } ); // load the index.ejs file
         }
     });
 

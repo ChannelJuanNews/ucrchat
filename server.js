@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
-var server = require('http').createServer(app)
-var io = require('socket.io')(server)
+//var server = require('http').createServer(app)
+//var io = require('socket.io')(server)
 
 var port     = process.env.PORT || 3000;
 var mongoose = require('mongoose');
@@ -25,13 +25,12 @@ mongoose.connect(db.url, function(err){
     }
 }); // connect to our database
 
-// require('./config/passport')(passport); // pass passport for configuration
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.json()); // get information from html forms
-app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.urlencoded({extended : false}));
 
 app.set('view engine', 'ejs'); // set up ejs for templating
 app.use(express.static('views')) // serv static content in views
@@ -55,3 +54,8 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 app.listen(port, function(){
     console.log('we in nigga at port ' + port);
 });
+
+
+/*io.on('connection', function(socket){
+    console.log('we in')
+})*/

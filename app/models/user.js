@@ -12,7 +12,7 @@ var userSchema = mongoose.Schema({
         email        : String,
         name         : String
     },
-    ucrEmail        : String,
+    ucrEmail        : {unique : true, type : String },
     validEmail      : Boolean,
     restrictedChat  : Boolean,
     url : String

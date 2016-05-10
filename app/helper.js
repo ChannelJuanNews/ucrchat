@@ -20,7 +20,7 @@ function validEmail(req){
 var helper = {
 
     isAuthenticated : function(req){
-        if (req.isAuthenticated){
+        if (req.isAuthenticated()){
             return true
         }
         return false
@@ -31,16 +31,10 @@ var helper = {
         res.redirect('/');
     },
 
-    validEmail : function(req){
-        // this returns true if we have an @ucr.edu email
-        var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([ucr]+\.)+[edu]{2,}))$/;
-        return re.test(req.body.email);
-    },
-
     verifyEmail : function(req,res){
 
         if (!validEmail(req)){
-            res.send('invalid email')
+            res.redirect('/')
         }
 
         // If We have a valid email address then save the user and send out email
