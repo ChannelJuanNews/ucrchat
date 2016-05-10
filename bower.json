@@ -1,0 +1,21 @@
+{
+  "name": "ucrchat",
+  "description": "A chat site for UCR",
+  "main": "server.js",
+  "authors": [
+    "Juan G Ruelas Jr. (www.ruelas.me)"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "Materialize": "materialize#^0.97.6"
+  }
+}
