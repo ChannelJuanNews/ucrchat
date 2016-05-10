@@ -21,10 +21,14 @@
         <!--these are our scripts--->
         <%- include('partials/_jquery.ejs')%>
         <%- include('partials/_material.ejs')%>
+        <%- include('partials/_animatecss.ejs')%>
 
         <!--these are our scripts--->
         <script src="js/_nav.js" charset="utf-8"></script>
         <script src="js/_init.js" charset="utf-8"></script>
+        <% if (!user) { %>
+            <script src="js/_modal_logic.js" charset="utf-8"></script>
+        <% } %>
 
     </body>
 </html>

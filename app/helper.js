@@ -10,6 +10,12 @@ var transporter = nodemailer.createTransport({
     }
 });
 
+function validEmail(req){
+    // this returns true if we have an @ucr.edu email
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([ucr]+\.)+[edu]{2,}))$/;
+    return re.test(req.body.email);
+}
+
 
 var helper = {
 
@@ -42,6 +48,9 @@ var helper = {
         newUser.ucrEmail = req.body.email;
         newUser.validEmail = false;
         newUser.restrictedChat = true;
+
+        console.log(newUser)
+
         newUser.save(function(err, user){
             if (err){
                 console.log(err)
