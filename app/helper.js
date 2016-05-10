@@ -36,48 +36,51 @@ var helper = {
         if (!validEmail(req)){
             res.redirect('/')
         }
+        else {
+            // If We have a valid email address then save the user and send out email
+            console.log('REQ===============================================================', req)
+            newUser = new User();
+            newUser.ucrEmail = req.body.email;
+            newUser.validEmail = false;
+            newUser.restrictedChat = true;
 
-        // If We have a valid email address then save the user and send out email
-        newUser = new User();
-        newUser.ucrEmail = req.body.email;
-        newUser.validEmail = false;
-        newUser.restrictedChat = true;
+            console.log(newUser)
 
-        console.log(newUser)
+            newUser.save(function(err, user){
+                if (err){
+                    console.log(err)
+                    res.render('/', {email : req.body.email});
+                }
+                else {
 
-        newUser.save(function(err, user){
-            if (err){
-                console.log(err)
-                return
-            }
-            else {
+                    // setup e-mail data with unicode symbols
+                    var mailOptions = {
+                        from: 'ucrchat@gmail.com', // sender address
+                        to: req.body.email, // list of receivers
+                        subject: 'UCR chat email verification', // Subject line
+                        html: '<b>Hello world!</b>',
+                        alternatives: [
+                            {
+                                contentType: 'text/x-web-markdown',
+                                content: '**Hello world!**'
+                            }
+                        ]
+                    };
 
-                // setup e-mail data with unicode symbols
-                var mailOptions = {
-                    from: 'ucrchat@gmail.com', // sender address
-                    to: req.body.email, // list of receivers
-                    subject: 'UCR chat email verification', // Subject line
-                    html: '<b>Hello world!</b>',
-                    alternatives: [
-                        {
-                            contentType: 'text/x-web-markdown',
-                            content: '**Hello world!**'
-                        }
-                    ]
-                };
+                    // send mail with defined transport object
+                      transporter.sendMail(mailOptions, function(err, info){
+                          if(err){
+                              return console.log(err);
+                              res.render('/', {email : req.body.email});
+                          }
+                          console.log('Message sent: ' + info.response);
+                          res.render('/', {email : req.body.email});
+                      });
 
-                // send mail with defined transport object
-                  transporter.sendMail(mailOptions, function(err, info){
-                      if(err){
-                          res.send({done: true})
-                          return console.log(err);
-                      }
-                      console.log('Message sent: ' + info.response);
-                      res.send({done:true})
-                  });
+                }
+            })
+        }
 
-            }
-        })
     },
 
     emailExists : function(req){

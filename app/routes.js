@@ -19,7 +19,6 @@ module.exports = function(app, passport) {
         }
         else {
             helper.verifyEmail(req, res);
-            res.render('thankyou', {email : req.body.email});
         }
     });
 
