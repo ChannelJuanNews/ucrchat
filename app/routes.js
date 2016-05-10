@@ -13,13 +13,21 @@ module.exports = function(app, passport) {
         }
     });
 
-    app.post('/signup', function(req, res){
-        helper.verifyEmail(req, res);
-        res.render('thankyou', {email : req.body.email});
+    app.post('/signin', function(req, res){
+        if (helper.emailExists(req)){
+            helper.authenticate(req, res)
+        }
+        else {
+            helper.verifyEmail(req, res);
+            res.render('thankyou', {email : req.body.email});
+        }
     });
 
     app.get('/authenticate/:id', function(req, res){
-        helper.authenticate(req, res)
+        res.render('password');
+    });
+    app.post('/authenticate/:id', function(req, res){
+        helper.authenticate(req, res);
     });
 
     // route for facebook authentication and login

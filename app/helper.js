@@ -36,6 +36,7 @@ var helper = {
         if (!validEmail(req)){
             res.send('invalid email')
         }
+
         // If We have a valid email address then save the user and send out email
         newUser = new User();
         newUser.ucrEmail = req.body.email;
@@ -76,8 +77,24 @@ var helper = {
         })
     },
 
+    emailExists : function(req){
+        User.find({ucrEmail : req.body.email}, function(err, user){
+            if (err){
+                console.log(err)
+            }
+            else {
+                if (user){
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+        })
+    },
+
     authenticate : function(req, res, passport){
-        passport.authenticate('local-signup', {
+        passport.authenticate('local-signin', {
             successRedirect : '/',
             failureRedirect : '/error',
             failureFlash : true
