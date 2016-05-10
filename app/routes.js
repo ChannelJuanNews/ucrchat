@@ -13,8 +13,28 @@ module.exports = function(app, passport) {
         }
     });
 
+    app.post('/signup', function(req, res){
+        helper.verifyEmail(req, res);
+        res.render('thankyou', {email : req.body.email});
+    });
+
+    app.get('/authenticate/:id', function(req, res){
+        helper.authenticate(req, res)
+    });
+
+    // route for facebook authentication and login
+    app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+
+     // handle the callback after facebook has authenticated the user
+     app.get('/auth/facebook/callback',
+         passport.authenticate('facebook', {
+             successRedirect : '/',
+             failureRedirect : '/error',
+             failureFlash : true
+         }));
+
     // THIS WILL LOG US OUT FOR SURE MA NIGGA
     app.get('/logout', function(req, res) {
-        helper.logout(req, res)
+        helper.logout(req, res, passport)
     });
 };
